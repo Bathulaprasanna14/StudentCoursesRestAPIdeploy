@@ -1,0 +1,25 @@
+pipeline {
+    agent { label JDK_17}
+    triggers { 
+       pollscm ('* * * * *')
+    }
+    stages {
+        stage ('vcs') {
+            steps { 
+                git url:'https://github.com/Bathulaprasanna14/StudentCoursesRestAPIdeploy.git',
+                 branch:'develop'
+            }
+        }
+        stage ('build') {
+            steps {
+                sh 'docker image build -t bathulaprasanna/spc:latest .'
+            }
+        }
+        stage ('scan and push') {
+            steps {
+                sh 'echo docker scan bathulaprasanna/spc:latest'
+                sh 'docker image push bathulaprasanna/spc:latest'
+            }
+        }
+    }
+}
